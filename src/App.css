@@ -1,0 +1,138 @@
+.App {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+  flex-direction: column;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
+
+body {
+  background: #15202b;
+  width: 600px;
+  height: 180px;
+}
+
+.Tweet {
+  margin-top: 5px;
+  width: 600px;
+  height: 180px;
+  color: white;
+  border: 2px solid #cccccc;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.input {
+  background: transparent;
+  color: #cccccc;
+  width: 99%;
+  height: 80%;
+  border: none;
+  resize: none;
+  padding-left: 0 15px;
+  padding-top: 15px;
+  outline: none;
+  font-family: "Roboto";
+}
+
+.tweetBtn {
+  margin-bottom: 20px;
+  margin-right: 15px;
+}
+
+.tweetList {
+  color: white;
+}
+
+.tweetItem {
+  width: 600px;
+  height: 100px;
+  background: #343a40;
+  margin: 10px 0;
+  border-radius: 6px;
+  padding: 15px;
+  font-family: "Roboto";
+  font-size: 14px;
+}
+
+.tweetItem > div:nth-child(1) {
+  display: flex;
+  justify-content: space-between;
+  color: #6c757d;
+  margin-bottom: 15px;
+}
+
+.tweetItem > div:nth-child(2) {
+  font-weight: 400;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.extraChars {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  width: 100%;
+  padding-left: 10px;
+}
+
+.extraChars > span {
+  width: 338px;
+  height: 29px;  
+}
+
+.extraChars > span >span{
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding-left: 5px;
+  width: 338px;
+  height: 29px;
+  transition: ease-out 2s;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
