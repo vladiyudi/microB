@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 
-export default function TweetInput({ handleButton }) {
+export default function TweetInput({ handleButton, error, loading}) {
   const [input, setInput] = useState("");
   const handleInput = (e) => {
     setInput(e.target.value);
@@ -18,9 +18,12 @@ export default function TweetInput({ handleButton }) {
       />
       <div className="extraChars">
         <span >
-            <span className={input.length < 141 ?"d-none":"none"}>The tweet can't containt more than 140 chars.</span> </span>
+            <span className={input.length < 141 ?"d-none":"none"}>The tweet can't containt more than 140 chars.</span> 
+            {error?<span>{error}</span>: <span className="d-none">{error}</span> }
+            {/* <span>{error}</span> */}
+            </span>
       <Button
-        disabled={input.length > 140 ? true : false}
+        disabled={input.length > 140 || error || loading ? true : false}
         variant="primary"
         className="tweetBtn"
         onClick={() => {

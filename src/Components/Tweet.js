@@ -4,10 +4,10 @@ export default function Tweet({tweet}) {
   return (
     <div className='tweetItem'>
         <div>
-         <span> {tweet.name} </span> 
-         <span> {tweet.time} </span> 
+         <span> {tweet.userName} </span> 
+         <span> {tweet.date} </span> 
          </div>
-      <div> {tweet.text} </div> 
+      <div> {tweet.content} </div> 
         </div>
   )
 }

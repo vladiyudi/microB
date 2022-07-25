@@ -6,7 +6,7 @@ export default function TweetList({tweets}) {
   return (
     <div className='tweetList'>
         {tweets.map(tweet=>{
-         return <Tweet key={tweet.key} tweet={tweet}/>
+         return <Tweet key={tweet.id} tweet={tweet}/>
         })}
     </div>
   )

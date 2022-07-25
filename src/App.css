@@ -4,6 +4,10 @@
   justify-content: center;
   width: 100vw;
   flex-direction: column;
+  
+}
+.spinnerContainer{
+position: relative;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
@@ -109,7 +113,13 @@ body {
   height: 29px;  
 }
 
-.extraChars > span >span{
+#spinner {
+  position: absolute;
+  left: -350px;
+  top: 70px;
+}
+
+.extraChars > span span{
   font-family: "Roboto";
   font-style: normal;
   font-weight: 400;
@@ -123,7 +133,8 @@ body {
   border: 1px solid #f5c6cb;
   border-radius: 4px;
   padding-left: 5px;
-  width: 338px;
+  width: 430px;
+  min-width: fit-content;
   height: 29px;
   transition: ease-out 2s;
 }
