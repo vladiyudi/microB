@@ -20,7 +20,6 @@ export default function TweetInput({ handleButton, error, loading}) {
         <span >
             <span className={input.length < 141 ?"d-none":"none"}>The tweet can't containt more than 140 chars.</span> 
             {error?<span>{error}</span>: <span className="d-none">{error}</span> }
-            {/* <span>{error}</span> */}
             </span>
       <Button
         disabled={input.length > 140 || error || loading ? true : false}

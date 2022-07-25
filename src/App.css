@@ -4,10 +4,9 @@
   justify-content: center;
   width: 100vw;
   flex-direction: column;
-  
 }
-.spinnerContainer{
-position: relative;
+.spinnerContainer {
+  position: relative;
 }
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
@@ -110,16 +109,72 @@ body {
 
 .extraChars > span {
   width: 338px;
-  height: 29px;  
+  height: 29px;
 }
 
 #spinner {
   position: absolute;
-  left: -350px;
+  left: -50px;
   top: 70px;
 }
 
-.extraChars > span span{
+.profile{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  color: white;
+  font-family: roboto;
+}
+
+.inputProfile{
+  background-color: #15202B;
+  margin-top: 3px;
+  padding-left: 15px;
+  font-weight: bold;
+}
+.inputProfile:focus{
+  background-color: #15202B;
+  color: white;
+}
+.profileBtn{
+  align-self:flex-end;
+  margin-top: 15px;
+  margin-right: 10px;
+}
+
+.w-50 label{
+  margin-top: 20px;
+}
+
+.navBar {
+  display: flex;
+  width: 80vw;
+  height: 58px;
+  background: #343a40;
+  border-radius: 6px;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-left: 30px;
+}
+
+.navBar * {
+font-family: 'Roboto';
+font-style: normal;
+font-weight: 400;
+font-size: 14px;
+line-height: 16px;
+color: #CCCCCC;
+margin: 0 30px;
+text-decoration: none;
+}
+
+.navBar *:hover{
+  color: white;
+}
+
+.extraChars > span span {
   font-family: "Roboto";
   font-style: normal;
   font-weight: 400;

@@ -1,88 +1,28 @@
 import logo from "./logo.svg";
 import "./App.css";
-import TweetInput from "./Components/TweetInput";
-import TweetList from "./Components/TweetList";
-import { useEffect, useState } from "react";
-import { nanoid } from "nanoid";
-import Spinner from 'react-bootstrap/Spinner';
+import Navbar from "./Components/Navbar";
+import Home from './Routes/Home.js'
+import { BrowserRouter, Routes,
+  Route, } from "react-router-dom";
+  import Profile from "./Routes/Profile";
+import { useState, useEffect } from "react";
 
 function App() {
-  const [tweets, setTweets] = useState(localStorage.getItem("tweets") ? JSON.parse(localStorage.getItem("tweets")):[]);
 
-  const [serverTweets, setServerTweets] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-
-  useEffect(()=>{
-    // tweets[0].content && 
-    postToServer()
-  },[tweets])
-
-  const postToServer = async ()=>{
-    try {
-      setLoading(true)
-    const res = await fetch ('https://micro-blogging-dot-full-stack-course-services.ew.r.appspot.com/tweet',{
-    method: 'POST', 
-    headers: {"Content-type": "application/json;charset=UTF-8"},
-    body: JSON.stringify({
-      content: tweets[0].content,
-      userName: tweets[0].userName,
-      date: tweets[0].date,
-      id: tweets[0].id
-    }) 
-    })
-    const data = await res.json()
-    if (!res.ok) {
-      setError("Error: " + data.message)
-      setTimeout(()=>{
-        setError('')
-      }, 3000)
-      throw new Error(data.message) }
-    setLoading(false)
-   setServerTweets((state)=>[tweets[0],...state])
-}
-    catch (err){
-      console.error(err)
-    }
-    finally{
-      setLoading(false)
-    }
+  const [userName, setUserName] = useState('')
+  const handleProfile = (input)=>{
+    setUserName(input)
   }
-  const getFromServer = async ()=>{
-    try{
-      setLoading(true)
-    const res = await fetch('https://micro-blogging-dot-full-stack-course-services.ew.r.appspot.com/tweet')
-    if (!res.ok) throw new Error(err=>err.message())
-    const data = await res.json()
-    const sorted = data.tweets.sort((a,b)=>{return a.date-b.date})
-    setServerTweets(sorted)
-    setLoading(false)
-   }
-    catch (err){
-      setError("Error: " + err)
-      setTimeout(()=>{
-        setError('')
-      }, 3000)
-      console.log("error ", err)
-    } 
-  }
-  useEffect(()=>{
-    getFromServer()
-  },[])
-
-  const handleButton = (input) => {
-    const tweet = [{ id: nanoid(), content: input, userName: "Vladi", date: new Date().toISOString()}, ...tweets];
-   setTweets(tweet);
-  };
+  
   return (
     <div className="App">
-      <div className="spinnerContainer">
-       <Spinner id="spinner"
-      className={loading?"mt-2":"d-none"} 
-      animation="border" variant="warning" />
-      </div>
-      <TweetInput handleButton={handleButton} error={error} loading={loading}/>
-      <TweetList tweets={serverTweets}/>
+  <BrowserRouter>
+  <Navbar/>
+  <Routes>
+  <Route path="/" element= { <Home user={userName}/> }/>
+  <Route path="/Profile" element={ <Profile handleProfile={handleProfile}/>}/>
+    </Routes>
+  </BrowserRouter>
     </div>
   );
 }
