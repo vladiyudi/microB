@@ -60,6 +60,7 @@ body {
   padding: 15px;
   font-family: "Roboto";
   font-size: 14px;
+  word-wrap: break-word;
 }
 
 .tweetItem > div:nth-child(1) {
@@ -129,13 +130,13 @@ body {
 }
 
 .inputProfile{
-  background-color: #15202B;
+  background-color: transparent;
   margin-top: 3px;
   padding-left: 15px;
   font-weight: bold;
 }
 .inputProfile:focus{
-  background-color: #15202B;
+  background-color: transparent;
   color: white;
 }
 .profileBtn{

@@ -1,4 +1,5 @@
 import React from 'react'
+import { TweetContext } from '../Routes/Home'
 
 export default function Tweet({tweet}) {
   return (
