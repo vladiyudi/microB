@@ -8,11 +8,14 @@ import { useState, useEffect} from "react";
 
 function App() {
 
-  const [userName, setUserName] = useState('Vladi')
+  const [userName, setUserName] = useState(  localStorage.getItem("Profile") ? JSON.parse(localStorage.getItem("Profile")):'Vladi')
+  
   const handleProfile = (input)=>{
+    localStorage.setItem("Profile", JSON.stringify(input))
     setUserName(input)
   }
-  
+
+ 
   return (
     <div className="App">
   <BrowserRouter>
