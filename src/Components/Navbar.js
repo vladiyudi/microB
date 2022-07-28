@@ -7,10 +7,10 @@ export default function Navbar() {
     <div className="navBar">
       <NavLink className={({ isActive }) =>
               isActive ? "text-white" : ""
-            } to="/">Home</NavLink>
+            } to="/Home">Home</NavLink>
       <NavLink className={({ isActive }) =>
               isActive ? "text-white" : ""
-            } to="/Profile">Profile</NavLink>
+            } to="/">Profile</NavLink>
       </div>
   
       </div>

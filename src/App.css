@@ -140,9 +140,14 @@ body {
   color: white;
 }
 .profileBtn{
-  align-self:flex-end;
+  /* align-self:flex-end; */
   margin-top: 15px;
   margin-right: 10px;
+}
+
+.signupLogin {
+  display: inline;
+  width: fit-content;
 }
 
 .w-50 label{

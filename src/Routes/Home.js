@@ -5,8 +5,9 @@ import { useEffect, useState, createContext } from "react";
 import { nanoid } from "nanoid";
 import Spinner from "react-bootstrap/Spinner";
 import { collection, getDocs, addDoc } from "firebase/firestore";
-
+import { useNavigate } from "react-router-dom";
 import { db } from "../fire.js";
+import { getAuth } from "firebase/auth";
 
 export const TweetContext = createContext([]);
 
@@ -16,13 +17,25 @@ export default function Home({ user }) {
   const [error, setError] = useState("");
   const colRef = collection(db, "Tweets");
 
+  const navigate = useNavigate()
+
+  const auth = getAuth()
+
+  useEffect(()=>{
+    auth.onAuthStateChanged(user=>{
+      if (!user){
+        navigate('/')
+      }})
+  },[auth])
+
   const getSnapshot = async () => {
     try {
       setLoading(true);
       const tw = [];
       const snapshot = await getDocs(colRef);
       snapshot.forEach((doc) => {
-        tw.push({ ...doc.data(), id: doc.id });
+        tw.push(doc.data());
+        // console.log(doc.data())
       });
       tw.sort((a, b) => {
         return new Date(b.date) - new Date(a.date);
