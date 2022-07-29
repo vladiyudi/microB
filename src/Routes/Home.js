@@ -18,7 +18,6 @@ export default function Home({ user }) {
   const colRef = collection(db, "Tweets");
 
   const navigate = useNavigate()
-
   const auth = getAuth()
 
   useEffect(()=>{
@@ -35,7 +34,6 @@ export default function Home({ user }) {
       const snapshot = await getDocs(colRef);
       snapshot.forEach((doc) => {
         tw.push(doc.data());
-        // console.log(doc.data())
       });
       tw.sort((a, b) => {
         return new Date(b.date) - new Date(a.date);
@@ -44,7 +42,7 @@ export default function Home({ user }) {
       setLoading(false);
     } catch (err) {
       console.error(err.message);
-      setError("Error: " + err.message);
+      setError(err.message);
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -58,7 +56,7 @@ export default function Home({ user }) {
       getSnapshot();
       setLoading(false);
     } catch (err) {
-      setError("Error: " + err.message);
+      setError(err.message);
       setTimeout(() => {
         setError("");
       }, 3000);

@@ -9,6 +9,28 @@
   position: relative;
 }
 
+.profCont{
+  height: 70px;
+}
+
+.profileForm{
+  width: 75%;
+}
+
+.formWrap{
+  width: 50%;
+}
+
+@media(max-width:1000px){
+  .profileForm{
+    width: 100%;
+  }
+  .formWrap{
+    width: 80%;
+   
+  }
+}
+
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
 
 body {
@@ -180,7 +202,7 @@ text-decoration: none;
   color: white;
 }
 
-.extraChars > span span {
+.extraChars > span span , .pError{
   font-family: "Roboto";
   font-style: normal;
   font-weight: 400;

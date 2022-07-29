@@ -34,16 +34,16 @@ export default function Profile({
     setSw(!sw);
   };
 
-  // useEffect(()=>{console.log(sw)}, [sw])
-
   return (
     <div className="profile">
-      <form className="d-flex flex-column w-75 align-items-md-center mt-4">
-        <div className="w-50 d-flex flex-column ">
+      <form className="d-flex flex-column  align-items-md-center mt-4 profileForm">
+        <div className="w-50 d-flex flex-column formWrap">
+          <div className="profCont">
           <h1>
             <b>Profile</b>
           </h1>
-          <span>{error && error}</span>
+          <span className={error?"pError":"d-none"}>{error && error}</span>
+          </div>
           <label>User Name</label>
           <Form.Control
             value={input}
@@ -63,12 +63,12 @@ export default function Profile({
           <Form.Control
             value={password}
             type="password"
-            placeholder="Enter password"
+            placeholder={userEmail?"Logged in":"Enter password"}
             onChange={handlePassword}
             className="inputProfile text-white"
           />
          
-          <div className="d-flex  justify-content-between mt-3 pe-2">
+          <div className="d-flex align-items-baseline justify-content-between mt-3 pe-2">
           <div className="d-flex">
             <Form.Check
               onChange={handleCheck}
@@ -76,7 +76,7 @@ export default function Profile({
               type="switch"
               id="custom-switch"
             />
-            <span className="ms-1">Signup / Login</span> 
+            <span className="ms-1 d-flex align-items-center "><span className={sw ? "fw-bold":undefined}>Signup </span>/ <span className={!sw ? "fw-bold":undefined}>Login</span> </span> 
             </div>
             <GoogleButton
             onClick={() => {
