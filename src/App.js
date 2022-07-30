@@ -28,6 +28,7 @@ function App() {
     null);
   const [loading, setLoading] = useState(false);
   const auth = getAuth();
+ 
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
@@ -54,19 +55,27 @@ function App() {
     }
   };
 
+  
  
   const authUser = async (input, email, password) => {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
-      auth.onAuthStateChanged((user) => {
-        updateProfile(auth.currentUser, {
-          displayName: input,
-        }).then(() => {
-          console.log("here")
-          setUserName(user.displayName);
-        });
-      });
+
+      const update = await updateProfile(auth.currentUser, {
+        displayName: input,
+      })
+      setUserName(cred.user.displayName);
+      // auth.onAuthStateChanged((user) => {
+      //   updateProfile(auth.currentUser, {
+      //     displayName: input,
+      //   }).then(() => {
+      //     setUserName(user.displayName);
+      //   });
+      // });
       setUserEmail(cred.user.email);
+
+      
+
     } catch (err) {
       console.error(err.message);
       setError(err.message);
@@ -81,6 +90,7 @@ function App() {
       const out = await signOut(auth);
       setUserEmail("");
       setUserName("");
+      setImageUrl(null)
     } catch (err) {
       console.error("problem with logout: ", err.message);
       setError(err.message);

@@ -72,7 +72,7 @@ export default function Profile({
               <input onChange={handleProfileImage} type="file"></input>
               <Button onClick={() => {
                   handleImageSubmit(profileImage);
-                }}>Image</Button>
+                }}>Upload</Button>
                 
               <Spinner animation="grow" className={!loading &&"d-none"}/>
             </div>

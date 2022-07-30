@@ -4,7 +4,7 @@ import TweetList from "../Components/TweetList";
 import { useEffect, useState, createContext } from "react";
 import { nanoid } from "nanoid";
 import Spinner from "react-bootstrap/Spinner";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, doc, snapshot, onSnapshot } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../fire.js";
 import { getAuth } from "firebase/auth";
@@ -20,12 +20,31 @@ export default function Home({ user }) {
   const navigate = useNavigate()
   const auth = getAuth()
 
+  const userRef = collection(db, "Users")
+
+  const updateUsersCollection = async (user)=>{
+    const updatedUser = await addDoc(userRef, user);
+    console.log(updatedUser)
+  }
+
+  // const liveUpdate = async ()=>{
+  //   const unsub = onSnapshot(doc(colRef), (doc)=>{console.log(("cuurent.D", doc))}
+  // }
+  // liveUpdate()
+
   useEffect(()=>{
     auth.onAuthStateChanged(user=>{
       if (!user){
         navigate('/')
       }})
   },[auth])
+
+  // const getUserByID = async ()=>{
+  //  const users = await getDocs(auth)
+  //  console.log("users", users)
+  // }
+
+  // getUserByID()
 
   const getSnapshot = async () => {
     try {
@@ -70,12 +89,12 @@ export default function Home({ user }) {
 
   const handleButton = (input) => {
     const tweet = {
+      uid: auth.currentUser.uid,
       id: nanoid(),
       content: input,
       userName: user,
       date: new Date().toISOString(),
     };
-    // postToServer(tweet);
     addToFirestore(tweet);
   };
 
