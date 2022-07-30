@@ -11,21 +11,17 @@ import { getAuth } from "firebase/auth";
 
 export const TweetContext = createContext([]);
 
-export default function Home({ user }) {
+export default function Home({ user, userRef }) {
   const [fireTweets, setFireTweets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const colRef = collection(db, "Tweets");
+  const [twName, setTwName] = useState({})
 
   const navigate = useNavigate()
   const auth = getAuth()
 
-  const userRef = collection(db, "Users")
-
-  const updateUsersCollection = async (user)=>{
-    const updatedUser = await addDoc(userRef, user);
-    console.log(updatedUser)
-  }
+ 
 
   // const liveUpdate = async ()=>{
   //   const unsub = onSnapshot(doc(colRef), (doc)=>{console.log(("cuurent.D", doc))}
@@ -39,20 +35,22 @@ export default function Home({ user }) {
       }})
   },[auth])
 
-  // const getUserByID = async ()=>{
-  //  const users = await getDocs(auth)
-  //  console.log("users", users)
-  // }
-
-  // getUserByID()
-
   const getSnapshot = async () => {
     try {
       setLoading(true);
       const tw = [];
+      const us =[]
+      const users = await getDocs(userRef)
+      users.forEach((doc)=>{us.push(doc.data())})
       const snapshot = await getDocs(colRef);
       snapshot.forEach((doc) => {
-        tw.push(doc.data());
+        us.forEach((el)=>{
+          if (el.uid===doc.data().uid){
+            const newObj = {userName: el.displayName}
+            const updatedTweet = Object.assign(doc.data(), newObj)
+            tw.push(updatedTweet);
+          }        
+        })
       });
       tw.sort((a, b) => {
         return new Date(b.date) - new Date(a.date);
@@ -92,7 +90,8 @@ export default function Home({ user }) {
       uid: auth.currentUser.uid,
       id: nanoid(),
       content: input,
-      userName: user,
+      userName: "",
+      // user,
       date: new Date().toISOString(),
     };
     addToFirestore(tweet);
