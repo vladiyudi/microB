@@ -12,10 +12,14 @@ import {
   onSnapshot,
   getDoc,
   query,
+  limit,
+  orderBy,
+  startAfter,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../fire.js";
 import { getAuth } from "firebase/auth";
+import { Button } from "react-bootstrap";
 
 export const TweetContext = createContext([]);
 
@@ -23,18 +27,20 @@ export default function Home({ user, userRef }) {
   const [fireTweets, setFireTweets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const colRef = collection(db, "Tweets");
+  const colRef = collection(db, "Tweets")
   const [liveServer, setLiveServer] = useState(false);
-
   const navigate = useNavigate();
   const auth = getAuth();
+ const [latest, setLatest] = useState(5)
 
   useEffect(() => {
-    const unsub = onSnapshot(query(colRef), (doc) => {
+    const unsub = onSnapshot(query(colRef, orderBy("date", "desc"), 
+    // startAfter(), 
+    limit(latest)), (doc) => {
       setLiveServer(doc);
     });
     return () => unsub();
-  }, []);
+  }, [latest]);
 
   useEffect(() => {
     liveServer && getSnapshot();
@@ -61,10 +67,7 @@ export default function Home({ user, userRef }) {
           return updatedTweet;
         })
       );
-      tw.sort((a, b) => {
-        return new Date(b.date) - new Date(a.date);
-      });
-      setFireTweets(tw.splice(0, 50));
+      setFireTweets(tw);
       setLoading(false);
     } catch (err) {
       console.error(err.message);
@@ -88,11 +91,14 @@ export default function Home({ user, userRef }) {
       console.error(err);
     }
   };
-
-  // useEffect(() => {
-  //   getSnapshot();
-  // }, []);
-
+useEffect(()=>{
+  window.addEventListener('scroll', ()=>{
+  window.scrollY>=28 
+  && 
+  loadMoreData()
+   })
+})
+ 
   const handleButton = (input) => {
     const tweet = {
       uid: auth.currentUser.uid,
@@ -104,6 +110,10 @@ export default function Home({ user, userRef }) {
     };
     addToFirestore(tweet);
   };
+
+  const loadMoreData =  ()=>{
+    setLatest(latest+5)   
+  }
 
   return (
     <div>
