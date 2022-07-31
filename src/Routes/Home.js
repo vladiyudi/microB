@@ -9,7 +9,6 @@ import {
   getDocs,
   addDoc,
   doc,
-  snapshot,
   onSnapshot,
   getDoc,
   query,
@@ -56,14 +55,12 @@ export default function Home({ user, userRef }) {
         liveServer.docs?.map(async (d) => {
           const id = d.data().uid;
           const userSnap = await getDoc(doc(db, "Users", id));
-          const newObj = { userName: userSnap.data().displayName };
+          const newObj = { userName: userSnap.data().displayName, 
+          photoUrl: userSnap.data().photoURL};
           const updatedTweet = Object.assign(d.data(), newObj);
           return updatedTweet;
         })
       );
-
-      console.log("outside", tw);
-
       tw.sort((a, b) => {
         return new Date(b.date) - new Date(a.date);
       });
