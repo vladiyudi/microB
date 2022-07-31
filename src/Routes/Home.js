@@ -4,7 +4,16 @@ import TweetList from "../Components/TweetList";
 import { useEffect, useState, createContext } from "react";
 import { nanoid } from "nanoid";
 import Spinner from "react-bootstrap/Spinner";
-import { collection, getDocs, addDoc, doc, snapshot, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  snapshot,
+  onSnapshot,
+  getDoc,
+  query,
+} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../fire.js";
 import { getAuth } from "firebase/auth";
@@ -16,42 +25,45 @@ export default function Home({ user, userRef }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const colRef = collection(db, "Tweets");
-  const [twName, setTwName] = useState({})
+  const [liveServer, setLiveServer] = useState(false);
 
-  const navigate = useNavigate()
-  const auth = getAuth()
+  const navigate = useNavigate();
+  const auth = getAuth();
 
- 
+  useEffect(() => {
+    const unsub = onSnapshot(query(colRef), (doc) => {
+      setLiveServer(doc);
+    });
+    return () => unsub();
+  }, []);
 
-  // const liveUpdate = async ()=>{
-  //   const unsub = onSnapshot(doc(colRef), (doc)=>{console.log(("cuurent.D", doc))}
-  // }
-  // liveUpdate()
+  useEffect(() => {
+    liveServer && getSnapshot();
+  }, [liveServer]);
 
-  useEffect(()=>{
-    auth.onAuthStateChanged(user=>{
-      if (!user){
-        navigate('/')
-      }})
-  },[auth])
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        navigate("/");
+      }
+    });
+  }, [auth]);
 
   const getSnapshot = async () => {
     try {
       setLoading(true);
-      const tw = [];
-      const us =[]
-      const users = await getDocs(userRef)
-      users.forEach((doc)=>{us.push(doc.data())})
-      const snapshot = await getDocs(colRef);
-      snapshot.forEach((doc) => {
-        us.forEach((el)=>{
-          if (el.uid===doc.data().uid){
-            const newObj = {userName: el.displayName}
-            const updatedTweet = Object.assign(doc.data(), newObj)
-            tw.push(updatedTweet);
-          }        
+      const tw = await Promise.all(
+        liveServer.docs?.map(async (d) => {
+          const id = d.data().uid;
+          const userSnap = await getDoc(doc(db, "Users", id));
+          const newObj = { userName: userSnap.data().displayName };
+          const updatedTweet = Object.assign(d.data(), newObj);
+          return updatedTweet;
         })
-      });
+      );
+
+      console.log("outside", tw);
+
       tw.sort((a, b) => {
         return new Date(b.date) - new Date(a.date);
       });
@@ -70,7 +82,6 @@ export default function Home({ user, userRef }) {
     try {
       setLoading(true);
       const res = await addDoc(colRef, tweet);
-      getSnapshot();
       setLoading(false);
     } catch (err) {
       setError(err.message);
@@ -81,9 +92,9 @@ export default function Home({ user, userRef }) {
     }
   };
 
-  useEffect(() => {
-    getSnapshot();
-  }, []);
+  // useEffect(() => {
+  //   getSnapshot();
+  // }, []);
 
   const handleButton = (input) => {
     const tweet = {

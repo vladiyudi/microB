@@ -19,7 +19,7 @@ import {
   GoogleAuthProvider,
   updateProfile,
 } from "firebase/auth";
-import { collection, getDocs, addDoc, doc, snapshot, onSnapshot } from "firebase/firestore";
+import { collection, setDoc, getDocs, addDoc, doc, snapshot, onSnapshot } from "firebase/firestore";
 import { db } from "../fire.js";
 
 export default function Calcs() {
@@ -30,16 +30,15 @@ export default function Calcs() {
     null);
   const [loading, setLoading] = useState(false);
   const auth = getAuth();
-
-
   const userRef = collection(db, "Users")
 
   const updateUsersCollection = async (user)=>{
-    const updatedUser = await addDoc(userRef, user);
-    console.log(updatedUser)
+    // console.log("uid", user.uid)
+    // const updatedUser = await addDoc(userRef, user);
+    const setU = await setDoc(doc(db, "Users", user.uid),user)
+    // console.log(updatedUser)
   }
  
-
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
@@ -65,8 +64,6 @@ export default function Calcs() {
     }
   };
 
-  
- 
   const authUser = async (input, email, password) => {
     try {
       const cred = await createUserWithEmailAndPassword(auth, email, password);
