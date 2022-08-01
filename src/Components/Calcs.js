@@ -35,6 +35,8 @@ export default function Calcs() {
   const auth = getAuth();
   const userRef = collection(db, "Users");
 
+    const [myTweets, setMyTweets] =useState(false)
+
   const updateUsersCollection = async (user) => {
     const setU = await setDoc(doc(db, "Users", user.uid), user);
   };
@@ -151,15 +153,18 @@ export default function Calcs() {
     }
   };
   
+  const handleMyTweets = ()=>{
+    setMyTweets(!myTweets)
+  }
 
   return (
     <div className="App">
       <BrowserRouter>
-        <Navbar />
+        <Navbar handleMyTweets={handleMyTweets} myTweets={myTweets}/>
         <Routes>
           <Route
             path="/Home"
-            element={<Home user={userName} userRef={userRef} />}
+            element={<Home user={userName} userRef={userRef} myTweets={myTweets}/>}
           />
           <Route
             path="/"

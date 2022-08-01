@@ -14,6 +14,7 @@ import {
   query,
   limit,
   orderBy,
+  where,
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { db } from "../fire.js";
@@ -21,21 +22,26 @@ import { getAuth } from "firebase/auth";
 
 export const TweetContext = createContext([]);
 
-export default function Home() {
+export default function Home({ myTweets }) {
   const [fireTweets, setFireTweets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const colRef = collection(db, "Tweets")
+  const colRef = collection(db, "Tweets");
   const [liveServer, setLiveServer] = useState(false);
   const navigate = useNavigate();
   const auth = getAuth();
- const [latest, setLatest] = useState(5)
+  const [latest, setLatest] = useState(5);
+  const [selected, setSelected] = useState([])
+
+ 
 
   useEffect(() => {
-    const unsub = onSnapshot(query(colRef, orderBy("date", "desc"), 
-    limit(latest)), (doc) => {
-      setLiveServer(doc);
-    });
+    const unsub = onSnapshot(
+      query(colRef, orderBy("date", "desc"), limit(latest)),
+      (doc) => {
+        setLiveServer(doc);
+      }
+    );
     return () => unsub();
   }, [latest]);
 
@@ -58,15 +64,23 @@ export default function Home() {
         liveServer.docs?.map(async (d) => {
           const id = d.data().uid;
           const userSnap = await getDoc(doc(db, "Users", id));
-          const newObj = { userName: userSnap.data().displayName, 
-          photoUrl: userSnap.data().photoURL};
+          const newObj = {
+            userName: userSnap.data().displayName,
+            photoUrl: userSnap.data().photoURL,
+          };
           const updatedTweet = Object.assign(d.data(), newObj);
           return updatedTweet;
         })
       );
-      setFireTweets(tw);
+      if (myTweets) {
+        const showMyTweets = tw.filter((el) => {
+          return el.uid === auth.currentUser.uid;
+        });
+        setFireTweets(showMyTweets);
+      } else setFireTweets(tw);
       setLoading(false);
-    } catch (err) {
+    } 
+    catch (err) {
       console.error(err.message);
       setError(err.message);
       setTimeout(() => {
@@ -74,6 +88,11 @@ export default function Home() {
       }, 3000);
     }
   };
+
+  useEffect(() => {
+    setLatest(100)
+    getSnapshot();
+  }, [myTweets]);
 
   const addToFirestore = async (tweet) => {
     try {
@@ -88,16 +107,15 @@ export default function Home() {
       console.error(err);
     }
   };
-useEffect(()=>{
-  window.addEventListener('scroll', loadMoreData)
-   return()=> window.removeEventListener("scroll", loadMoreData)
-})
+  useEffect(() => {
+    window.addEventListener("scroll", loadMoreData);
+    return () => window.removeEventListener("scroll", loadMoreData);
+  });
 
-const loadMoreData =  (e)=>{
-  window.scrollY>=28 &&
-  setLatest(latest+5)   
-}
- 
+  const loadMoreData = (e) => {
+    window.scrollY >= 28 && setLatest(latest + 5);
+  };
+
   const handleButton = (input) => {
     const tweet = {
       uid: auth.currentUser.uid,

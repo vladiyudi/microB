@@ -202,6 +202,11 @@ body {
   padding-left: 30px;
 }
 
+.navCont{
+  width: 180px;
+  margin-top: 30px;
+}
+
 .navBar * {
 font-family: 'Roboto';
 font-style: normal;
