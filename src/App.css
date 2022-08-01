@@ -9,6 +9,17 @@
   position: relative;
 }
 
+.browse{
+  width: 82px;
+}
+
+.avatar{
+  width: 40px;
+  height: 40px;
+  border: solid;
+  object-fit: contain;
+}
+
 .profCont{
   height: 100px;
 }
@@ -18,7 +29,7 @@
 }
 
 .profileForm{
-  width: 75%;
+  width: 60%;
 }
 
 .formWrap{
@@ -198,11 +209,11 @@ font-weight: 400;
 font-size: 14px;
 line-height: 16px;
 color: #CCCCCC;
-margin: 0 30px;
+/* margin: 0 30px; */
 text-decoration: none;
 }
 
-.navBar *:hover{
+.navBar #nav:hover{
   color: white;
 }
 

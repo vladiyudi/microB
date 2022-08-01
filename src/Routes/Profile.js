@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
-import { Button } from "react-bootstrap";
+import { Button, FormControl } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
 import GoogleButton from "react-google-button";
 import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
 import {Spinner} from "react-bootstrap";
 
 export default function Profile({
@@ -25,10 +24,6 @@ export default function Profile({
   const [sw, setSw] = useState(true);
   const [profileImage, setProfileImage] = useState(null);
 
-  // useEffect(()=>{
-  //   console.log("imU", imageUrl)
-  // })
-
   const handleInput = (e) => {
     setInput(e.target.value);
   };
@@ -46,13 +41,10 @@ export default function Profile({
   };
 
   const handleProfileImage = (e) => {
-    console.log("click")
     if (e.target.files[0]) {
-      // console.log(e.target.files[0])
       setProfileImage(e.target.files[0]);
     }
   };
-
   return (
     <div className="profile ">
       <form className="d-flex flex-column  align-items-md-center mt-4 profileForm">
@@ -61,20 +53,19 @@ export default function Profile({
             <h1 className="inline">
               <b>Profile</b>
             </h1>
-            <div className="d-flex flex-column align-items-end">
-              <Stack direction="row" spacing={1} className="justify-content-end me-2 w-25">
-                <Avatar className="border"
+            <div className="d-flex flex-column align-items-end pt-3">
+                <Avatar className="me-4 mb-2"
                   alt="Remy Sharp"
                   src={imageUrl}
-                  sx={{ width: 120, height: 120 }}
+                  sx={{ width: 100, height: 100 }}
                 />
-              </Stack>
-              <input onChange={handleProfileImage} type="file"></input>
-              <Button onClick={() => {
+                <div className="d-flex  justify-content-end">
+                <Spinner animation="grow" className={!loading?"d-none":"me-2 mt-1"}/>
+                <FormControl className="browse" type="file" onChange={handleProfileImage} />
+                <Button onClick={() => {
                   handleImageSubmit(profileImage);
                 }}>Upload</Button>
-                
-              <Spinner animation="grow" className={!loading &&"d-none"}/>
+                </div>
             </div>
           </div>
           <label>User Name</label>
@@ -84,7 +75,6 @@ export default function Profile({
             onChange={handleInput}
             className="inputProfile text-white"
           />
-
           <label>Email and Password</label>
           <Form.Control
             value={email}
@@ -130,11 +120,11 @@ export default function Profile({
               setPassword("");
               input && setInput("");
             }}
+            disabled={!input && !email?true:false}
             className="profileBtn"
           >
             {sw ? "Sign Up" : "Log In"}
           </Button>
-
           <Button
             className="profileBtn"
             variant="secondary"

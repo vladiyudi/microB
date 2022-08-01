@@ -150,6 +150,8 @@ export default function Calcs() {
       }, 3000);
     }
   };
+  
+
   return (
     <div className="App">
       <BrowserRouter>
