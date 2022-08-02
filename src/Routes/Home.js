@@ -19,6 +19,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { db } from "../fire.js";
 import { getAuth } from "firebase/auth";
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 export const TweetContext = createContext([]);
 
