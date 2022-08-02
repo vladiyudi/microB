@@ -4,7 +4,7 @@ import Tweet from './Tweet';
 import { TweetContext } from '../Routes/Home'
 
 export default function TweetList() {
-  const tweets = useContext(TweetContext)
+  const {fireTweets:tweets} = useContext(TweetContext)
   return (
     <div className='tweetList'>
         {tweets && tweets.map(tweet=>{

@@ -34,8 +34,8 @@ export default function Calcs() {
   const [loading, setLoading] = useState(false);
   const auth = getAuth();
   const userRef = collection(db, "Users");
-
-    const [myTweets, setMyTweets] =useState(false)
+  const [searchTweets, setSearchTweets] = useState("")
+  const [searchUsers, setSearchUsers] = useState("")
 
   const updateUsersCollection = async (user) => {
     const setU = await setDoc(doc(db, "Users", user.uid), user);
@@ -80,7 +80,6 @@ export default function Calcs() {
       });
       setUserName(cred.user.displayName);
       setUserEmail(cred.user.email);
-
       updateUsersCollection({
         uid: cred.user.uid,
         displayName: cred.user.displayName,
@@ -153,18 +152,21 @@ export default function Calcs() {
     }
   };
   
-  const handleMyTweets = ()=>{
-    setMyTweets(!myTweets)
-  }
+const tweetSearch = (input)=>{
+setSearchTweets(input)
+}
+const userSearch = (input)=>{
+    setSearchUsers(input)
+}
 
   return (
     <div className="App">
       <BrowserRouter>
-        <Navbar handleMyTweets={handleMyTweets} myTweets={myTweets}/>
+        <Navbar handleLogout={handleLogout} tweetSearch={tweetSearch} userSearch={userSearch} searchTweets={searchTweets} searchUsers={searchUsers}/>
         <Routes>
           <Route
             path="/Home"
-            element={<Home user={userName} userRef={userRef} myTweets={myTweets}/>}
+            element={<Home searchTweets={searchTweets} searchUsers={searchUsers}/>}
           />
           <Route
             path="/"

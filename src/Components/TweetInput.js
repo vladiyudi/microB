@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import { getAuth } from "firebase/auth";
 
-export default function TweetInput({ handleButton, error, loading}) {
+export default function TweetInput({ handleButton, error, loading, handleMyTweets, myTweets}) {
+
+  const auth = getAuth()
   const [input, setInput] = useState("");
   const handleInput = (e) => {
     setInput(e.target.value);
@@ -17,6 +20,7 @@ export default function TweetInput({ handleButton, error, loading}) {
         onChange={handleInput}
       />
       <div className="extraChars">
+      <Button size="sm" onClick={handleMyTweets} disabled={!auth.currentUser?true:false} className='ms-2' variant={!myTweets?"secondary":"success"}>{!myTweets? "My Tweets":"All Tweets"}</Button>
         <span >
             <span className={input.length < 141 ?"d-none":"none"}>The tweet can't containt more than 140 chars.</span> 
             {error?<span>{error}</span>: <span className="d-none">{error}</span> }
@@ -26,7 +30,7 @@ export default function TweetInput({ handleButton, error, loading}) {
         variant="primary"
         className="tweetBtn"
         onClick={() => {
-          handleButton(input);
+          input && handleButton(input);
           setInput("");
         }}
       >

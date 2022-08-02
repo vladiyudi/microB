@@ -1,9 +1,14 @@
 import React from 'react'
 import Avatar from '@mui/material/Avatar';
+import { TweetContext } from '../Routes/Home'
+import { useContext } from 'react';
 
 export default function Tweet({tweet}) {
+
+  const {myTweets} = useContext(TweetContext)
+ 
   return (
-    <div className='tweetItem'>
+    <div className={myTweets?"tweetItem myTweet":'tweetItem'}>
         <div>
           <div className='d-flex align-items-center'>
         <Avatar

@@ -207,6 +207,12 @@ body {
   margin-top: 30px;
 }
 
+.myTweet{
+  -webkit-box-shadow: 2px -4px 23px -10px rgba(165, 220, 165, 1);
+  -moz-box-shadow: 2px -4px 23px -10px rgba(165, 220, 165, 1);
+  box-shadow: 2px -4px 23px -10px rgba(165, 220, 165, 1);
+}
+
 .navBar * {
 font-family: 'Roboto';
 font-style: normal;

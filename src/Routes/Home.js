@@ -22,7 +22,7 @@ import { getAuth } from "firebase/auth";
 
 export const TweetContext = createContext([]);
 
-export default function Home({ myTweets }) {
+export default function Home({searchTweets, searchUsers}) {
   const [fireTweets, setFireTweets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -31,9 +31,7 @@ export default function Home({ myTweets }) {
   const navigate = useNavigate();
   const auth = getAuth();
   const [latest, setLatest] = useState(5);
-  const [selected, setSelected] = useState([])
-
- 
+  const [myTweets, setMyTweets] =useState(false)
 
   useEffect(() => {
     const unsub = onSnapshot(
@@ -60,29 +58,43 @@ export default function Home({ myTweets }) {
   const getSnapshot = async () => {
     try {
       setLoading(true);
-      const tw = await Promise.all(
+      const tw = await Promise?.all(
         liveServer.docs?.map(async (d) => {
-          const id = d.data().uid;
+          const id = d?.data().uid;
           const userSnap = await getDoc(doc(db, "Users", id));
           const newObj = {
-            userName: userSnap.data().displayName,
-            photoUrl: userSnap.data().photoURL,
+            userName: userSnap?.data().displayName,
+            photoUrl: userSnap?.data().photoURL,
           };
-          const updatedTweet = Object.assign(d.data(), newObj);
+          const updatedTweet = Object?.assign(d.data(), newObj);
           return updatedTweet;
         })
       );
       if (myTweets) {
-        const showMyTweets = tw.filter((el) => {
-          return el.uid === auth.currentUser.uid;
+        const showMyTweets = tw?.filter((el) => {
+          return el.uid === auth?.currentUser?.uid;
         });
         setFireTweets(showMyTweets);
-      } else setFireTweets(tw);
+      }else if(searchTweets){
+        const showSearchTweets = tw.filter(el=>{
+          const reg = new RegExp(searchTweets, "gi")          
+          if (reg.test(el.content))
+          return el
+        })
+        setFireTweets(showSearchTweets)
+      } else if (searchUsers){
+        const showSearchUsers = tw.filter(el=>{
+          const reg = new RegExp(searchUsers, "gi")
+          if (reg.test(el.userName))
+          return el})
+        setFireTweets(showSearchUsers)
+      }
+      else setFireTweets(tw);
       setLoading(false);
     } 
     catch (err) {
       console.error(err.message);
-      setError(err.message);
+      // setError(err.message);
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -90,9 +102,9 @@ export default function Home({ myTweets }) {
   };
 
   useEffect(() => {
-    setLatest(100)
+    myTweets && setLatest(100) || searchUsers && setLatest(100) || searchTweets && setLatest(100)
     getSnapshot();
-  }, [myTweets]);
+  }, [myTweets, searchUsers, searchTweets]);
 
   const addToFirestore = async (tweet) => {
     try {
@@ -126,6 +138,15 @@ export default function Home({ myTweets }) {
     };
     addToFirestore(tweet);
   };
+
+  const handleMyTweets = ()=>{
+    setMyTweets(!myTweets)
+  }
+
+  // const onScroll = (e) =>{
+  //   console.log("scoll", e)
+  // }
+
   return (
     <div>
       <div className="spinnerContainer">
@@ -136,8 +157,8 @@ export default function Home({ myTweets }) {
           variant="secondary"
         />
       </div>
-      <TweetInput handleButton={handleButton} error={error} loading={loading} />
-      <TweetContext.Provider value={fireTweets}>
+      <TweetInput handleButton={handleButton} handleMyTweets={handleMyTweets} myTweets={myTweets} error={error} loading={loading} />
+      <TweetContext.Provider value={{fireTweets, myTweets}}>
         <TweetList />
       </TweetContext.Provider>
     </div>
