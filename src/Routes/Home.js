@@ -23,7 +23,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 
 export const TweetContext = createContext([]);
 
-export default function Home({searchTweets, searchUsers}) {
+export default function Home({searchTweets, searchUsers, handleLike, }) {
   const [fireTweets, setFireTweets] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -33,6 +33,7 @@ export default function Home({searchTweets, searchUsers}) {
   const auth = getAuth();
   const [latest, setLatest] = useState(5);
   const [myTweets, setMyTweets] =useState(false)
+  const [likeSort, setLikeSort] = useState(false)
 
   useEffect(() => {
     const unsub = onSnapshot(
@@ -56,9 +57,18 @@ export default function Home({searchTweets, searchUsers}) {
     });
   }, [auth]);
 
+  const getUserLikes  = async ()=>{
+  const id = auth?.currentUser?.uid
+        const docRef = doc(db, "Users", id)
+        const user = await getDoc(docRef)
+        const currentUserLikes = user.data().liked
+        return currentUserLikes
+  }
+
   const getSnapshot = async () => {
     try {
       setLoading(true);
+      const curUser = await getUserLikes()
       const tw = await Promise?.all(
         liveServer.docs?.map(async (d) => {
           const id = d?.data().uid;
@@ -66,12 +76,13 @@ export default function Home({searchTweets, searchUsers}) {
           const newObj = {
             userName: userSnap?.data().displayName,
             photoUrl: userSnap?.data().photoURL,
+            liked: curUser
           };
           const updatedTweet = Object?.assign(d.data(), newObj);
           return updatedTweet;
         })
       );
-      if (myTweets) {
+       if (myTweets) {
         const showMyTweets = tw?.filter((el) => {
           return el.uid === auth?.currentUser?.uid;
         });
@@ -103,9 +114,9 @@ export default function Home({searchTweets, searchUsers}) {
   };
 
   useEffect(() => {
-    myTweets && setLatest(100) || searchUsers && setLatest(100) || searchTweets && setLatest(100)
+    myTweets && setLatest(100) || searchUsers && setLatest(100) || searchTweets && setLatest(100) || likeSort  && setLatest(100)
     getSnapshot();
-  }, [myTweets, searchUsers, searchTweets]);
+  }, [myTweets, searchUsers, searchTweets, likeSort]);
 
   const addToFirestore = async (tweet) => {
     try {
@@ -144,9 +155,9 @@ export default function Home({searchTweets, searchUsers}) {
     setMyTweets(!myTweets)
   }
 
-  // const onScroll = (e) =>{
-  //   console.log("scoll", e)
-  // }
+  const sortByLikes=()=>{
+    setLikeSort(!likeSort)
+  }
 
   return (
     <div>
@@ -158,8 +169,8 @@ export default function Home({searchTweets, searchUsers}) {
           variant="secondary"
         />
       </div>
-      <TweetInput handleButton={handleButton} handleMyTweets={handleMyTweets} myTweets={myTweets} error={error} loading={loading} />
-      <TweetContext.Provider value={{fireTweets, myTweets}}>
+      <TweetInput handleButton={handleButton} handleMyTweets={handleMyTweets} myTweets={myTweets} error={error} loading={loading} sortByLikes={sortByLikes}/>
+      <TweetContext.Provider value={{fireTweets, myTweets, handleLike, likeSort}}>
         <TweetList />
       </TweetContext.Provider>
     </div>

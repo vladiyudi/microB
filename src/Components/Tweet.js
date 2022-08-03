@@ -1,20 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import { TweetContext } from "../Routes/Home";
 import { useContext } from "react";
-import { Provider, LikeButton } from "@lyket/react";
+import {
+  Provider,
+  LikeButton,
+  ClapButton,
+  templates,
+  Twitter,
+} from "@lyket/react";
 import { useState } from "react";
+import { IconButton } from "@mui/material";
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+
 
 export default function Tweet({ tweet }) {
-  const { myTweets } = useContext(TweetContext);
-  const [like, setLike] = useState(false);
+  const { myTweets, handleLike, likeSort } = useContext(TweetContext);
+  const [liked, setLiked] = useState(false)
 
-  const handleLike = () => {
-    setLike(!like);
-  };
+  useEffect(()=>{  
+    const filt = tweet.liked?.filter((el)=>
+      el===tweet.id
+    )
+    filt && filt.length && setLiked(true)
+  },[tweet])
 
   return (
-    <div className={myTweets ? "tweetItem myTweet" : "tweetItem"}>
+    <div className={likeSort && !liked? "d-none":"undefined"}>
+    <div className={myTweets ? "tweetItem myTweet" : "tweetItem" }>
       <div>
         <div className="d-flex align-items-center">
           <Avatar
@@ -33,19 +46,16 @@ export default function Tweet({ tweet }) {
       <div className="ms-5 d-flex justify-content-between">
         <span className="pt-2">{tweet.content}</span>
         <div className="">
-          <Provider apiKey="pt_07a9e76aec5647ffd925d2ea85e070"
-            theme={{
-              colors: {
-                background:  "rgba(255, 224, 138, 0.4)",
-                text: "grey",
-                primary: "#b8fff3"
-              }
-            }}
-          >
-            <LikeButton id="how-to-reduce-footprint" namespace="post" />
-          </Provider>
+          <IconButton color={liked?"warning":"info"} onClick={() => {
+             setLiked(!liked)
+             handleLike(tweet.id, !liked)
+              }}
+              >
+           <ThumbUpOffAltIcon/>
+          </IconButton>
         </div>
       </div>
+    </div>
     </div>
   );
 }

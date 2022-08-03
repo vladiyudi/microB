@@ -20,8 +20,6 @@ export default function Navbar({ handleLogout, tweetSearch, userSearch, searchUs
    } else setHere(false)
   },[location])
 
-  console.log(here)
-
   const updateWarning = (bool) => {
     setWarning(bool);
   };

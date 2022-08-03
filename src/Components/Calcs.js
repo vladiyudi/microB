@@ -25,6 +25,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { db } from "../fire.js";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 export default function Calcs() {
   const [userName, setUserName] = useState("");
@@ -36,6 +37,7 @@ export default function Calcs() {
   const userRef = collection(db, "Users");
   const [searchTweets, setSearchTweets] = useState("")
   const [searchUsers, setSearchUsers] = useState("")
+
 
   const updateUsersCollection = async (user) => {
     const setU = await setDoc(doc(db, "Users", user.uid), user);
@@ -159,6 +161,26 @@ const userSearch = (input)=>{
     setSearchUsers(input)
 }
 
+const handleLike = async (tweetID, likedTweet)=>{
+    const id = auth.currentUser.uid
+    const docRef = doc(db, "Users", id)
+    const user = await getDoc(docRef)
+    if (user.data().liked){
+        let arr =  user.data().liked
+        if (likedTweet){
+        arr.push(tweetID)} 
+        else {
+            const del = arr.filter(el=>el!=tweetID)
+           arr = del
+        }
+        const set = new Set(arr)
+        const upd = Array.from(set)
+        const updated = await updateDoc (docRef, {liked: upd})  
+    } else {
+        const updated = await updateDoc (docRef, {liked: [tweetID]}) 
+    }
+}
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -166,7 +188,8 @@ const userSearch = (input)=>{
         <Routes>
           <Route
             path="/Home"
-            element={<Home searchTweets={searchTweets} searchUsers={searchUsers}/>}
+            element={<Home searchTweets={searchTweets} searchUsers={searchUsers}  handleLike={handleLike}
+            />}
           />
           <Route
             path="/"
